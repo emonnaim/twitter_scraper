@@ -1,0 +1,22 @@
+anyio==3.6.2
+beautifulsoup4==4.12.2
+certifi==2023.5.7
+charset-normalizer==3.1.0
+fastapi==0.95.1
+filelock==3.12.0
+greenlet==2.0.2
+idna==3.4
+lxml==4.9.2
+pydantic==1.10.7
+PySocks==1.7.1
+pyTelegramBotAPI==4.11.0
+requests==2.30.0
+sniffio==1.3.0
+snscrape @ git+https://github.com/JustAnotherArchivist/snscrape.git@3dd9c28e31b8babeb2a187fbae994d9717ded168
+soupsieve==2.4.1
+SQLAlchemy==1.4.41
+sqlalchemy2-stubs==0.0.2a34
+sqlmodel==0.0.8
+starlette==0.26.1
+typing_extensions==4.5.0
+urllib3==2.0.2
