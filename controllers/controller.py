@@ -1,5 +1,6 @@
 import requests
 from typing import Union
+from models.channel import ChannelRead
 from models.account import AccountRead,Account
 from loguru import logger
 logger.add("bot.log",format="{time:YYYY-MM-DD HH:mm:ss} | {level} | {function} | {message}",colorize=False,enqueue=True,mode="w")
@@ -31,7 +32,58 @@ class Controller :
                 return response.json()
         except Exception as e : 
             logger.error(f"unexpected error {str(e)}")
+    def get_channel(self,channel_id) -> Union[dict, list] : 
+        logger.info(f"get channel channel_id : {channel_id} ")
+        try : 
+            response =  self.session.get(self.api_base_endpoint+self.channels_endpoint+"/"+str(channel_id))
+            if response.status_code == 200 :
+                channel = response.json()
+                print(channel)
+                logger.info(f"gettings channel successfully")
+                return channel
+            else  :
+                logger.info(f"error occured error_code {response.status_code} detail : {response.json()['detail']}")
+                return response.json()
+        except Exception as e : 
+            logger.error(f"unexpected error {str(e)}")
+    def change_channel_status(self,channel_id,status : bool) -> Union[bool,dict] : 
+        try : 
+            logger.info(f"change channel status channel_id : {channel_id} status : {str(status)}")
+            response =  self.session.post(self.api_base_endpoint+self.channels_endpoint+"/channel_status"+"/"+str(channel_id),
+                                         params={"status" : status,})
+            if response.status_code == 200 :
+                return True
+            else :
+                logger.info(f"error occured error_code {response.status_code} detail : {response.json()['detail']}")
+        except Exception as e : 
+            logger.error(f"unexpected error {str(e)}")
+    def change_replies_status(self,channel_id,status : bool) -> Union[bool,dict] : 
+        try : 
+            logger.info(f"change channel replies channel_id : {channel_id} status : {str(status)}")
+            response =  self.session.post(self.api_base_endpoint+self.channels_endpoint+"/replies_status"+"/"+str(channel_id),
+                                         params={"status" : status,})
+            if response.status_code == 200 :
+                return True
+            else :
+                logger.info(f"error occured error_code {response.status_code} detail : {response.json()['detail']}")
+        except Exception as e : 
+            logger.error(f"unexpected error {str(e)}")
+    def change_blacklist_status(self,channel_id,status : bool) -> Union[bool,dict] : 
+        try : 
+            logger.info(f"change channel blacklist channel_id : {channel_id} status : {str(status)}")
+            response =  self.session.post(self.api_base_endpoint+self.channels_endpoint+"/blacklist_status"+"/"+str(channel_id),
+                                         params={"status" : status,})
+            if response.status_code == 200 :
+                return True
+            else :
+                logger.info(f"error occured error_code {response.status_code} detail : {response.json()['detail']}")
+        except Exception as e : 
+            logger.error(f"unexpected error {str(e)}")
+    
+    
 
+
+            
 
 
             
