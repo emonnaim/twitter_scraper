@@ -5,10 +5,15 @@ from sqlalchemy import BigInteger,Column
 if TYPE_CHECKING : 
     from .channel import Channel
     from .tweet import Tweet
-
-class Account(SQLModel,table=True) : 
-    id            : Optional[int] = Field(default=None, primary_key=True)
+class AccountBase(SQLModel) : 
     username      : str           = Field(unique=True)
+    
+class AccountRead(AccountBase) : 
+    id : int
+
+
+class Account(AccountBase,table=True) : 
+    id            : Optional[int] = Field(default=None, primary_key=True)
     profile_pic   : Optional[str] = Field(default=None)
     last_tweet_id : Optional[int]          = Field(sa_column=Column(BigInteger))
     profile_pic   : Optional[str] = Field(default=None)
@@ -18,7 +23,7 @@ class Account(SQLModel,table=True) :
     created_time    : datetime   = Field(default_factory=datetime.utcnow,nullable=False)
     ##### Relationship
     channel_id      : Optional[int] =  Field(default=None,foreign_key='channel.id') 
-    channel         : Optional["Channel"] = Relationship(back_populates="accounts")
+    account_channel : Optional["Channel"] = Relationship(back_populates="accounts")
     tweets          : list["Tweet"] = Relationship(back_populates="account")
 
 
