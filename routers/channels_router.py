@@ -12,6 +12,13 @@ def get_channels(*,session : Session = Depends(get_session)) :
     channels = session.exec(fetch_statement).all()
     return channels
 
+@router.get("/{channel_id}",response_model=ChannelRead)
+def get_channel(*,channel_id : int ,session : Session = Depends(get_session)) : 
+    channel = session.get(Channel,channel_id)
+    if channel == None : 
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail="Channel Not Found")
+    return channel
+
 @router.post('/add_channel',response_model=ChannelRead)
 def add_channel(*,channel_name : str,session : Session = Depends(get_session)) : 
     try : 
@@ -38,7 +45,7 @@ def change_channel_status(status  : bool ,channel_id : int,session : Session = D
     channel.is_active = status
     commit_changes(session,[channel])
     
-@router.post('/replies_statues/{channel_id}')
+@router.post('/replies_status/{channel_id}')
 def change_replies_status(status  : bool ,channel_id : int,session : Session = Depends(get_session)) : 
 
     channel = session.get(Channel,channel_id)
@@ -47,7 +54,7 @@ def change_replies_status(status  : bool ,channel_id : int,session : Session = D
     channel.replies_check = status
     commit_changes(session,[channel])
 
-@router.post('/blacklist_statues/{channel_id}')
+@router.post('/blacklist_status/{channel_id}')
 def change_replies_status(status  : bool ,channel_id : int,session : Session = Depends(get_session)) : 
 
     channel = session.get(Channel,channel_id)
