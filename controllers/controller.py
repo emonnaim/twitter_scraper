@@ -28,7 +28,7 @@ class Controller :
                 logger.info(f"adding successfully")
                 return accounts
             else  :
-                logger.info(f"error occured error_code {response.status_code} detail : {response.json()['detail']}")
+                logger.info(f"error occured error_code : {response.status_code} detail : {response.json()['detail']}")
                 return response.json()
         except Exception as e : 
             logger.error(f"unexpected error {str(e)}")
@@ -42,7 +42,7 @@ class Controller :
                 logger.info(f"gettings channel successfully")
                 return channel
             else  :
-                logger.info(f"error occured error_code {response.status_code} detail : {response.json()['detail']}")
+                logger.info(f"error occured error_code : {response.status_code} detail : {response.json()['detail']}")
                 return response.json()
         except Exception as e : 
             logger.error(f"unexpected error {str(e)}")
@@ -65,7 +65,7 @@ class Controller :
             if response.status_code == 200 :
                 return True
             else :
-                logger.info(f"error occured error_code {response.status_code} detail : {response.json()['detail']}")
+                logger.info(f"error occured error_code : {response.status_code} detail : {response.json()['detail']}")
         except Exception as e : 
             logger.error(f"unexpected error {str(e)}")
     def change_blacklist_status(self,channel_id,status : bool) -> Union[bool,dict] : 
@@ -76,7 +76,7 @@ class Controller :
             if response.status_code == 200 :
                 return True
             else :
-                logger.info(f"error occured error_code {response.status_code} detail : {response.json()['detail']}")
+                logger.info(f"error occured error_code : {response.status_code} detail : {response.json()['detail']}")
         except Exception as e : 
             logger.error(f"unexpected error {str(e)}")
 
@@ -88,9 +88,57 @@ class Controller :
             if response.status_code == 200 :
                 return True
             else : 
-                logger.info(f"error occured error_code {response.status_code} detail : {response.json()['detail']}")
+                logger.info(f"error occured error_code : {response.status_code} detail : {response.json()['detail']}")
         except Exception as e : 
             logger.error(f"unexpected error {str(e)}")
+    
+    def change_retweet_status(self,username) : 
+        try : 
+            print(1)
+        except Exception as e : 
+            logger.error(f'unexpected error {str(e)}')
+    
+    def get_keywords(self,keyword_type,channel_id) : 
+        try : 
+            logger.info(f"get keywords channel_id : {channel_id}  type : {keyword_type}")
+            response =  self.session.get(self.api_base_endpoint+f"{str(keyword_type)}_keywords"+"/"+str(channel_id))
+            if response.status_code == 200 :
+                keywords = response.json()
+                return keywords
+            else : 
+                logger.info(f"error occured error_code : {response.status_code} detail : {response.json()['detail']}")
+        except Exception as e : 
+            logger.error(f'unexpected error {str(e)}')
+
+    def add_keyword(self,keyword,keyword_type,channel_id) : 
+        try : 
+            logger.info(f"add keyword type channel_id : {channel_id} keyword : {str(keyword)} type : {keyword_type}")
+            response =  self.session.post(self.api_base_endpoint+f"{str(keyword_type)}_keywords"+"/"+str(channel_id),
+                                          json=[keyword])
+            if response.status_code == 200 :
+                return True
+            else : 
+                logger.info(f"error occured error_code : {response.status_code} detail : {response.json()['detail']}")
+        except Exception as e : 
+            logger.error(f'unexpected error {str(e)}')
+
+    def delete_keyword(self,keyword,keyword_type,channel_id) : 
+        try : 
+            logger.info(f"delete keyword type channel_id : {channel_id} keyword : {str(keyword)} type : {keyword_type}")
+            response =  self.session.delete(self.api_base_endpoint+f"{str(keyword_type)}_keywords"+"/"+str(channel_id),
+                                          json=[keyword])
+            if response.status_code == 200 :
+                return True
+            else : 
+                logger.info(f"error occured error_code : {response.status_code} detail : {response.json()['detail']}")
+        except Exception as e : 
+            logger.error(f'unexpected error {str(e)}')
+
+
+
+
+
+    
 
     
 
