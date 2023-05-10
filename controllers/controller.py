@@ -38,7 +38,6 @@ class Controller :
             response =  self.session.get(self.api_base_endpoint+self.channels_endpoint+"/"+str(channel_id))
             if response.status_code == 200 :
                 channel = response.json()
-                print(channel)
                 logger.info(f"gettings channel successfully")
                 return channel
             else  :
@@ -52,6 +51,7 @@ class Controller :
             response =  self.session.post(self.api_base_endpoint+self.channels_endpoint+"/channel_status"+"/"+str(channel_id),
                                          params={"status" : status,})
             if response.status_code == 200 :
+                logger.info(f"change channel status successfully")
                 return True
             else :
                 logger.info(f"error occured error_code {response.status_code} detail : {response.json()['detail']}")
@@ -63,6 +63,7 @@ class Controller :
             response =  self.session.post(self.api_base_endpoint+self.channels_endpoint+"/replies_status"+"/"+str(channel_id),
                                          params={"status" : status,})
             if response.status_code == 200 :
+                logger.info(f"change replies status successfully")
                 return True
             else :
                 logger.info(f"error occured error_code : {response.status_code} detail : {response.json()['detail']}")
@@ -74,6 +75,7 @@ class Controller :
             response =  self.session.post(self.api_base_endpoint+self.channels_endpoint+"/blacklist_status"+"/"+str(channel_id),
                                          params={"status" : status,})
             if response.status_code == 200 :
+                logger.info(f"change blacklist status successfully")
                 return True
             else :
                 logger.info(f"error occured error_code : {response.status_code} detail : {response.json()['detail']}")
@@ -86,6 +88,7 @@ class Controller :
             response =  self.session.post(self.api_base_endpoint+self.channels_endpoint+"/tweet_type"+"/"+str(channel_id),
                                          params={"tweet_type" : tweet_type,})
             if response.status_code == 200 :
+                logger.info(f"change tweet type successfully")
                 return True
             else : 
                 logger.info(f"error occured error_code : {response.status_code} detail : {response.json()['detail']}")
@@ -104,6 +107,7 @@ class Controller :
             response =  self.session.get(self.api_base_endpoint+f"{str(keyword_type)}_keywords"+"/"+str(channel_id))
             if response.status_code == 200 :
                 keywords = response.json()
+                logger.info(f"get keywords successfully")
                 return keywords
             else : 
                 logger.info(f"error occured error_code : {response.status_code} detail : {response.json()['detail']}")
@@ -116,6 +120,7 @@ class Controller :
             response =  self.session.post(self.api_base_endpoint+f"{str(keyword_type)}_keywords"+"/"+str(channel_id),
                                           json=[keyword])
             if response.status_code == 200 :
+                logger.info(f"add keyword successfully")
                 return True
             else : 
                 logger.info(f"error occured error_code : {response.status_code} detail : {response.json()['detail']}")
@@ -128,13 +133,51 @@ class Controller :
             response =  self.session.delete(self.api_base_endpoint+f"{str(keyword_type)}_keywords"+"/"+str(channel_id),
                                           json=[keyword])
             if response.status_code == 200 :
+                logger.info(f"delete keyword successfully")
                 return True
             else : 
                 logger.info(f"error occured error_code : {response.status_code} detail : {response.json()['detail']}")
         except Exception as e : 
             logger.error(f'unexpected error {str(e)}')
 
+    def get_apis(self) : 
+        try : 
+            logger.info("get apis")
+            response = self.session.get(self.api_base_endpoint+self.api_endpoint)
+            if response.status_code == 200 : 
+                logger.info(f"get apis successfully")
+                return response.json()
+            else : 
+                logger.info(f"error occured error_code : {response.status_code} detail : {response.json()['detail']}")
+        except Exception as e : 
+            logger.error(f'unexpected error {str(e)}')
+    def select_api(self,channel_id,api_id) : 
+        try : 
+            logger.info(f"select api for channel_id : {channel_id} api_id : {api_id}")
+            response =  self.session.post(
+                url=self.api_base_endpoint+self.api_endpoint+"/select_api/"+str(channel_id),
+                params={"api_id": int(api_id)}
+            )
+            if response.status_code == 200 : 
+                logger.info(f"select api successfully")
+                return True
+            else : 
+                logger.info(f"error occured error_code : {response.status_code} detail : {response.json()['detail']}")
+        except Exception as e : 
+            logger.error(f'unexpected error {str(e)}')
 
+    def delete_api(self,api_id) : 
+        try : 
+            logger.info(f"delete api api_id {api_id}")
+            response = self.session.delete(self.api_base_endpoint+self.api_endpoint+f"/{str(api_id)}")
+            if response.status_code == 200 : 
+                logger.info(f"delete api successfully")
+                return True
+            else : 
+                logger.info(f"error occured error_code : {response.status_code} detail : {response.json()['detail']}")
+        except Exception as e : 
+            logger.error(f'unexpected error {str(e)}')
+    
 
 
 
