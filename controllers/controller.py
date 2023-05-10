@@ -79,8 +79,21 @@ class Controller :
                 logger.info(f"error occured error_code {response.status_code} detail : {response.json()['detail']}")
         except Exception as e : 
             logger.error(f"unexpected error {str(e)}")
+
+    def change_tweet_type(self,channel_id,tweet_type) : 
+        try :
+            logger.info(f"change tweet type channel_id : {channel_id} tweet_type : {str(tweet_type)}")
+            response =  self.session.post(self.api_base_endpoint+self.channels_endpoint+"/tweet_type"+"/"+str(channel_id),
+                                         params={"tweet_type" : tweet_type,})
+            if response.status_code == 200 :
+                return True
+            else : 
+                logger.info(f"error occured error_code {response.status_code} detail : {response.json()['detail']}")
+        except Exception as e : 
+            logger.error(f"unexpected error {str(e)}")
+
     
-    
+
 
 
             
