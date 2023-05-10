@@ -1,0 +1,6 @@
+db_username = 'ahmed2020'
+db_password = 'ahmed2020'
+db_host = '142.93.96.91'
+db_port = '5432'
+db_type = 'postgresql'
+db_name     = 'twitter_db'
