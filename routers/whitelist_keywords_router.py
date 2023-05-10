@@ -16,11 +16,13 @@ def get_keywords(*,channel_id : int ,session : Session = Depends(get_session)) :
 @router.post('/{channel_id}',response_model=list[KeywordRead])
 def add_keywords_by_channel_id(keywords : list[str],channel_id : int,session : Session = Depends(get_session)) : 
     channel  =session.get(Channel, channel_id)
-    print(channel)
     if channel == None : 
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail="Channel Not Found")
     for keyword in keywords : 
-        channel.whitelist_keywords.append(WhitelistKeyword(keyword=keyword))
+        fetch_statement = select(WhitelistKeyword).where(WhitelistKeyword.keyword == keyword)
+        keyword_existance = session.exec(fetch_statement).first()
+        if keyword_existance == None : 
+            channel.whitelist_keywords.append(WhitelistKeyword(keyword=keyword))
     commit_changes(session,[channel])
     session.refresh(channel)
     return channel.whitelist_keywords

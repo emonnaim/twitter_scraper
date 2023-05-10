@@ -19,7 +19,10 @@ def add_keywords_by_channel_id(keywords : list[str],channel_id : int,session : S
     if channel == None : 
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail="Channel Not Found")
     for keyword in keywords : 
-        channel.blacklist_keywords.append(BlacklistKeyword(keyword=keyword))
+        fetch_statement = select(BlacklistKeyword).where(BlacklistKeyword.keyword == keyword)
+        keyword_existance = session.exec(fetch_statement).first()
+        if keyword_existance == None : 
+            channel.blacklist_keywords.append(BlacklistKeyword(keyword=keyword))
     commit_changes(session,[channel])
     session.refresh(channel)
     return channel.blacklist_keywords
