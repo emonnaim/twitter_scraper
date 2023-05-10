@@ -1,5 +1,6 @@
 from dependencies.database import get_session,commit_changes
 from models.api import API,APICreate,APIRead
+from models.channel import Channel
 from sqlmodel import Field, Session, SQLModel, select
 from fastapi import Depends, HTTPException, Query,status,Response,APIRouter
 
@@ -30,4 +31,11 @@ def delete_api(api_id : int,session : Session = Depends(get_session)) :
     session.delete(api)
     session.commit()
     
-    
+@router.post('/select_api/{channel_id}')
+def select_api(api_id : int , channel_id: int,session : Session = Depends(get_session)) : 
+    api = session.get(API,api_id)
+    channel = session.get(Channel,channel_id)
+    if api == None or channel == None : 
+        raise HTTPException(status_code=404,detail='Either channel or api not found')
+    channel.api = api
+    commit_changes(session=session,changes=[channel])
